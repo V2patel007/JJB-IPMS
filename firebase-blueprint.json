@@ -1,0 +1,58 @@
+{
+  "entities": {
+    "AppUser": {
+      "title": "AppUser",
+      "description": "User profile with role-based access control.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Unique user ID from Firebase Auth" },
+        "email": { "type": "string", "format": "email" },
+        "displayName": { "type": "string" },
+        "role": { "type": "string", "enum": ["USER", "ADMIN", "SUPERADMIN"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Project": {
+      "title": "Project",
+      "description": "Construction project details and approval status.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "location": {
+          "type": "object",
+          "properties": {
+            "city": { "type": "string" },
+            "state": { "type": "string" },
+            "country": { "type": "string" }
+          }
+        },
+        "projectType": { "type": "string" },
+        "brickType": { "type": "string" },
+        "images": { "type": "array", "items": { "type": "string" } },
+        "completionStatus": { "type": "string" },
+        "completionDate": { "type": "string", "format": "date-time" },
+        "builderName": { "type": "string" },
+        "submittedBy": { "type": "string" },
+        "submittedAt": { "type": "string", "format": "date-time" },
+        "adminFeedback": { "type": "string" },
+        "superadminFeedback": { "type": "string" },
+        "status": { "type": "string", "enum": ["DRAFT", "PENDING_ADMIN", "PENDING_SUPERADMIN", "PUBLISHED", "REJECTED"] },
+        "lastUpdatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "status", "submittedBy"]
+    }
+  },
+  "firestore": {
+    "/users/{uid}": {
+      "schema": "AppUser",
+      "description": "User profiles and roles."
+    },
+    "/projects/{projectId}": {
+      "schema": "Project",
+      "description": "Project submissions and approval workflow."
+    }
+  }
+}

@@ -1,0 +1,89 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function hasRole(role) {
+      return isAuthenticated() && getUserData().role == role;
+    }
+
+    function isAdmin() {
+      return hasRole('ADMIN') || isSuperAdmin();
+    }
+
+    function isSuperAdmin() {
+      return hasRole('SUPERADMIN') || (request.auth.token.email == "virajptl00@gmail.com" && request.auth.token.email_verified == true);
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+    function isValidUser(data) {
+      return data.keys().hasAll(['uid', 'email', 'role']) &&
+             data.uid is string &&
+             data.email is string &&
+             data.role in ['USER', 'ADMIN', 'SUPERADMIN'];
+    }
+
+    function isValidProject(data) {
+      return data.keys().hasAll(['name', 'status', 'submittedBy']) &&
+             data.name is string && data.name.size() > 0 && data.name.size() < 200 &&
+             data.status in ['DRAFT', 'PENDING_ADMIN', 'PENDING_SUPERADMIN', 'PUBLISHED', 'REJECTED'] &&
+             data.submittedBy is string;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow create: if isOwner(userId) && isValidUser(request.resource.data) && request.resource.data.role == 'USER';
+      allow update: if isSuperAdmin() || (isOwner(userId) && request.resource.data.role == resource.data.role);
+    }
+
+    match /projects/{projectId} {
+      // Anyone authenticated can read published projects
+      // Users can read their own projects
+      // Admins/Superadmins can read all
+      allow read: if isAuthenticated() && (
+        resource.data.status == 'PUBLISHED' || 
+        resource.data.submittedBy == request.auth.uid || 
+        isAdmin()
+      );
+
+      // Users can create projects as DRAFT or PENDING_ADMIN
+      allow create: if isAuthenticated() && 
+                    isValidProject(request.resource.data) && 
+                    request.resource.data.submittedBy == request.auth.uid &&
+                    request.resource.data.status in ['DRAFT', 'PENDING_ADMIN'];
+
+      // Update logic based on workflow
+      allow update: if isAuthenticated() && isValidProject(request.resource.data) && (
+        // Owner can update if DRAFT or REJECTED
+        (resource.data.submittedBy == request.auth.uid && resource.data.status in ['DRAFT', 'REJECTED'] && request.resource.data.status in ['DRAFT', 'PENDING_ADMIN']) ||
+        // Admin can approve/reject PENDING_ADMIN
+        (hasRole('ADMIN') && resource.data.status == 'PENDING_ADMIN' && request.resource.data.status in ['PENDING_SUPERADMIN', 'REJECTED']) ||
+        // Superadmin can approve/reject PENDING_SUPERADMIN
+        (isSuperAdmin() && resource.data.status == 'PENDING_SUPERADMIN' && request.resource.data.status in ['PUBLISHED', 'REJECTED']) ||
+        // Superadmin can edit anything
+        isSuperAdmin()
+      );
+
+      allow delete: if isSuperAdmin() || (resource.data.submittedBy == request.auth.uid && resource.data.status == 'DRAFT');
+    }
+  }
+}
