@@ -53,15 +53,14 @@ export default function WelcomeModal() {
               </div>
 
               <h2 className="text-3xl font-black text-gray-900 mb-6 tracking-tighter uppercase italic">
-                Design Reference
+                Workflow Reference
               </h2>
 
               <div className="space-y-6 text-gray-600 font-medium leading-relaxed max-w-md">
                 <p>
-                  This webpage has been designed as per your requirements and reference to <span className="text-primary font-bold">Petersen Tegl</span> using content from your website current <span className="text-primary font-bold">JJ Bricks</span>.
-                </p>
-                <p>
-                  To Get Web Development Quotation you can Click the button on right bottom of the page.
+This website has been designed as per your requirement to understand the working of the system , there is no database connected as of now . And this is just a dummy Interface (UI) .
+                <p> <br></br>
+To Get Quotation you can Click the button on right bottom of the page.                </p>
                 </p>
               </div>
 

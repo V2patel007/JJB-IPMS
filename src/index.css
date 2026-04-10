@@ -168,9 +168,20 @@
     -moz-osx-font-smoothing: grayscale;
   }
   h1 {
-    @apply text-4xl font-black tracking-tighter text-gray-900 uppercase italic;
+    @apply text-2xl font-bold text-slate-900;
   }
   html {
     @apply font-sans;
   }
+}
+
+/* Force hide Google AI Studio watermark injection */
+a[href*="ai.studio"],
+div[id*="google-ai"],
+div[class*="google-ai-studio"],
+[class*="watermark"] {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }

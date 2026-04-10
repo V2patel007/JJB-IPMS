@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>JJBricks — IPMS Quotation</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --ink:       #000000;
+    --clay:      #a31c24;
+    --terracotta:#7a151b;
+    --amber:     #a31c24;
+    --cream:     #f8f8f8;
+    --parchment: #f0f0f0;
+    --warm-mid:  #555555;
+    --rule:      #e0e0e0;
+    --highlight: #eeeeee;
+    --white:     #ffffff;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  @page { size: A4; margin: 0; }
+
+  body {
+    background: var(--parchment);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--ink);
+    font-size: 13.5px;
+    line-height: 1.65;
+  }
+
+  /* ── DOCUMENT SHELL ── */
+  .doc {
+    max-width: 860px;
+    margin: 60px auto 60px;
+    background: var(--white);
+    box-shadow: 0 8px 60px rgba(0,0,0,.1), 0 2px 8px rgba(0,0,0,.05);
+  }
+
+  /* ── HEADER ── */
+  .doc-header {
+    position: relative;
+    background: var(--white);
+    padding: 64px 56px 48px;
+    overflow: hidden;
+  }
+  .doc-header::before {
+    content: '';
+    position: absolute; top: 0; right: 0;
+    width: 420px; height: 100%;
+    opacity: .05;
+  }
+  .doc-header::after {
+    content: '';
+    position: absolute; bottom: -1px; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, var(--clay), var(--terracotta), var(--amber));
+  }
+
+  .header-top {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    position: relative; z-index: 1;
+  }
+  .brand-block {}
+  .brand-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 38px; font-weight: 700; letter-spacing: -.5px;
+    color: var(--ink); line-height: 1;
+  }
+  .brand-name span { color: var(--amber); }
+  .brand-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--amber); margin-top: 8px; opacity: .85;
+  }
+
+  .quotation-meta {
+    text-align: right; color: var(--ink); position: relative; z-index: 1;
+  }
+  .quotation-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: .35em; text-transform: uppercase;
+    color: var(--clay); font-weight: 500;
+  }
+  .quotation-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px; font-weight: 700; color: var(--ink);
+    margin-top: 4px; letter-spacing: -1px;
+  }
+  .quotation-date {
+    font-size: 11px; color: var(--warm-mid); margin-top: 6px;
+    font-family: 'DM Mono', monospace; letter-spacing: .05em;
+  }
+
+  .header-divider {
+    border: none; border-top: 2px solid var(--ink); width: 40px;
+    margin: 40px 0 32px; position: relative; z-index: 1;
+  }
+
+  .parties {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
+    position: relative; z-index: 1;
+  }
+  .party-label {
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    letter-spacing: .3em; text-transform: uppercase; color: var(--clay);
+    margin-bottom: 12px; font-weight: 500;
+  }
+  .party-name {
+    font-family: 'Playfair Display', serif; font-size: 18px;
+    font-weight: 600; color: var(--ink); line-height: 1.2;
+  }
+  .party-detail {
+    font-size: 12px; color: rgba(0,0,0,.55); margin-top: 6px;
+    line-height: 1.7;
+  }
+
+  /* ── BODY ── */
+  .doc-body { padding: 0 56px 56px; }
+
+  /* ── SECTION ── */
+  .section { margin-top: 48px; }
+  .section-header {
+    display: flex; align-items: center; gap: 14px; margin-bottom: 20px;
+  }
+  .section-num {
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    background: var(--clay); color: var(--white);
+    width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; letter-spacing: 0;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif; font-size: 18px;
+    font-weight: 600; color: var(--ink); letter-spacing: -.3px;
+    border-bottom: 2px solid var(--terracotta); padding-bottom: 4px;
+    flex: 1;
+  }
+
+  /* ── INTRO BOX ── */
+  .intro-box {
+    background: var(--cream); border-left: 4px solid var(--terracotta);
+    padding: 20px 24px; border-radius: 0 4px 4px 0;
+    font-size: 13px; line-height: 1.75; color: var(--warm-mid);
+    font-style: italic;
+  }
+  .intro-box strong { font-style: normal; color: var(--clay); }
+
+  /* ── SCOPE TABLE ── */
+  .scope-table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+  .scope-table thead tr {
+    background: var(--ink); color: var(--white);
+  }
+  .scope-table thead th {
+    padding: 11px 14px; text-align: left;
+    font-family: 'DM Mono', monospace; font-size: 9.5px;
+    letter-spacing: .18em; text-transform: uppercase; font-weight: 400;
+  }
+  .scope-table tbody tr {
+    border-bottom: 1px solid var(--rule);
+    transition: background .15s;
+  }
+  .scope-table tbody tr:hover { background: var(--cream); }
+  .scope-table tbody tr:last-child { border-bottom: none; }
+  .scope-table td {
+    padding: 13px 14px; font-size: 12.5px; vertical-align: top;
+  }
+  .scope-table .phase-cell {
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    color: var(--clay); font-weight: 500; white-space: nowrap;
+  }
+  .scope-table .deliverable-tag {
+    display: inline-block; background: var(--highlight);
+    border: 1px solid var(--rule); color: var(--warm-mid);
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    padding: 2px 7px; border-radius: 3px; margin: 2px 3px 2px 0;
+  }
+  .scope-table .days-cell {
+    text-align: center; font-family: 'DM Mono', monospace;
+    font-size: 12px; color: var(--terracotta); white-space: nowrap;
+  }
+
+  /* ── TIMELINE (SOP) ── */
+  .timeline { position: relative; padding-left: 24px; }
+  .timeline::before {
+    content: '';
+    position: absolute; left: 8px; top: 8px; bottom: 8px; width: 2px;
+    background: linear-gradient(to bottom, var(--clay), var(--amber));
+    border-radius: 1px;
+  }
+  .tl-item { position: relative; margin-bottom: 24px; }
+  .tl-item:last-child { margin-bottom: 0; }
+  .tl-dot {
+    position: absolute; left: -20px; top: 4px;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--white); border: 3px solid var(--terracotta);
+  }
+  .tl-item.active .tl-dot { background: var(--terracotta); }
+  .tl-header {
+    display: flex; align-items: baseline; gap: 12px; margin-bottom: 5px;
+  }
+  .tl-step {
+    font-family: 'DM Mono', monospace; font-size: 9px;
+    background: var(--ink); color: var(--white);
+    padding: 2px 8px; border-radius: 2px; letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+  .tl-title { font-size: 13.5px; font-weight: 500; color: var(--ink); }
+  .tl-desc { font-size: 12px; color: var(--warm-mid); line-height: 1.65; }
+
+  /* ── PAYMENT TABLE ── */
+  .payment-table { width: 100%; border-collapse: collapse; }
+  .payment-table thead tr { background: var(--ink); }
+  .payment-table thead th {
+    padding: 11px 16px; color: var(--white);
+    font-family: 'DM Mono', monospace; font-size: 9.5px;
+    letter-spacing: .18em; text-transform: uppercase;
+    font-weight: 400; text-align: left;
+  }
+  .payment-table tbody tr { border-bottom: 1px solid var(--rule); }
+  .payment-table tbody tr:last-child { border-bottom: none; }
+  .payment-table td { padding: 13px 16px; font-size: 12.5px; }
+  .payment-table .milestone-cell { font-weight: 500; color: var(--ink); }
+  .payment-table .percent-cell {
+    font-family: 'DM Mono', monospace; font-size: 14px;
+    color: var(--terracotta); font-weight: 500;
+  }
+  .payment-table .amount-cell {
+    font-family: 'DM Mono', monospace; font-size: 13px;
+    color: var(--clay); text-align: right;
+  }
+  .payment-table .trigger-cell { font-size: 11.5px; color: var(--warm-mid); }
+  .payment-table tfoot tr { background: var(--ink); }
+  .payment-table tfoot td {
+    padding: 14px 16px; color: var(--white);
+    font-family: 'DM Mono', monospace; font-size: 12px;
+  }
+  .payment-table tfoot .total-label { font-size: 11px; letter-spacing: .15em; opacity: .7; }
+  .payment-table tfoot .total-amount {
+    font-size: 16px; color: var(--amber); text-align: right;
+  }
+
+  /* ── INVESTMENT BOX ── */
+  .investment-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+  }
+  .investment-block {
+    background: #f8fafc; border: 1px solid var(--rule); border-radius: 4px;
+    padding: 24px; position: relative; overflow: hidden;
+  }
+  .investment-block.premium {
+    background: var(--cream);
+    border: 2px solid var(--clay);
+  }
+  .investment-label {
+    font-family: 'DM Mono', monospace; font-size: 9px;
+    letter-spacing: .2em; text-transform: uppercase; color: var(--amber);
+    opacity: .9; margin-bottom: 8px; font-weight: 500;
+  }
+  .investment-price {
+    font-family: 'Playfair Display', serif; font-size: 32px;
+    font-weight: 700; color: var(--ink); letter-spacing: -1px;
+    line-height: 1; margin-bottom: 12px;
+  }
+  .investment-price sup {
+    font-size: 16px; vertical-align: super; color: var(--clay);
+  }
+  .bundle-box {
+    background: var(--ink); color: var(--white);
+    padding: 20px 24px; border-radius: 4px; margin-top: 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .bundle-box .bundle-title {
+    font-family: 'Playfair Display', serif; font-size: 18px; color: var(--amber);
+    margin-bottom: 4px;
+  }
+
+  /* ── CLIENT DELIVERABLES ── */
+  .deliver-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  }
+  .deliver-item {
+    background: var(--cream); border: 1px solid var(--rule);
+    border-radius: 4px; padding: 13px 15px;
+  }
+  .deliver-text .dt-title { font-size: 12.5px; font-weight: 500; color: var(--ink); }
+  .deliver-text .dt-note { font-size: 11px; color: var(--warm-mid); margin-top: 3px; }
+
+  /* ── T&C ── */
+  .tc-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  }
+  .tc-item { display: flex; gap: 10px; align-items: flex-start; }
+  .tc-bullet {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--terracotta); flex-shrink: 0; margin-top: 6px;
+  }
+  .tc-text { font-size: 12px; color: var(--warm-mid); line-height: 1.6; }
+  .tc-text strong { color: var(--ink); font-weight: 500; }
+
+  /* ── PRD GRID ── */
+  .pages-grid-v2 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; border: 1px solid var(--rule); border-radius: 4px; overflow: hidden; }
+  .pgv2-header { background: var(--ink); color: var(--white); padding: 11px 16px; font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .2em; text-transform: uppercase; }
+  .pgv2-header .pg-nav-num { color: var(--white); margin-right: 6px; }
+  .pgv2-body { padding: 14px 16px 18px; border-top: 3px solid var(--terracotta); background: var(--white); border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+  .pgv2-body:nth-child(3n) { border-right: none; }
+  .pgv2-section { display: flex; gap: 8px; margin-bottom: 9px; align-items: flex-start; }
+  .pgv2-section:last-child { margin-bottom: 0; }
+  .pgv2-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--terracotta); flex-shrink: 0; margin-top: 5px; }
+  .pgv2-section-text { font-size: 11.5px; color: var(--ink); line-height: 1.5; }
+  .pgv2-section-text em { color: var(--warm-mid); font-style: normal; font-size: 10.5px; display: block; margin-top: 2px; }
+  .pgv2-sub { display: inline-block; background: var(--highlight); border: 1px solid var(--rule); color: var(--warm-mid); font-family: 'DM Mono', monospace; font-size: 9.5px; padding: 1px 6px; border-radius: 2px; margin: 2px 2px 0 0; }
+  .pgv2-global { grid-column: 1 / -1; background: var(--ink); padding: 14px 18px; display: flex; gap: 28px; flex-wrap: wrap; }
+  .pgv2-global-item { display: flex; gap: 7px; align-items: center; font-size: 11.5px; color: rgba(255,255,255,.65); }
+  .pgv2-global-item span { color: var(--amber); font-family: 'DM Mono', monospace; font-size: 9px; background: rgba(255,255,255,.08); padding: 2px 7px; border-radius: 2px; }
+
+</style>
+</head>
+<body>
+
+<div class="doc">
+
+  <header class="doc-header">
+    <div class="header-top">
+      <div class="logo-block">
+        <img src="https://cdn.prod.website-files.com/632a1357968e2ee5f6aee908/63442f3b05e9915c18d25e39_Rewamp%20(2)%20(1).svg" alt="ReWamp Digital" style="height: 52px;" />
+      </div>
+      <div class="quotation-meta">
+        <div class="quotation-label">Quotation</div>
+        <div class="quotation-number">#20260410</div>
+        <div class="quotation-date">ISSUED: 10 APR 2026</div>
+        <div class="quotation-date" style="opacity:.6; font-size: 9px;">VALID FOR 15 DAYS</div>
+      </div>
+    </div>
+
+    <hr class="header-divider"/>
+
+    <div class="parties">
+      <div>
+        <div class="party-label">Prepared For</div>
+        <div class="party-name">JJBricks</div>
+        <div class="party-detail">
+          Jay Jalaram Brick Works <br/>
+Vadodara, Gujarat<br/>
+branding@jjb.co.in
+        </div>
+      </div>
+      <div>
+        <div class="party-label">Prepared By</div>
+        <div class="party-name">ReWamp Digital</div>
+        <div class="party-detail">
+          Viraj Patel <br/>
+Vadodara, Gujarat<br/>
+virajptl00@gmail.com
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="doc-body">
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">1</div>
+        <div class="section-title">Project Overview</div>
+      </div>
+      <div class="intro-box">
+        Jay Jalaram Brick Works requires a bespoke, centralized <strong>Internal Project Management System (IPMS)</strong> to track, validate, and showcase construction projects utilizing JJBricks products. This platform will feature a strict <strong>multi-tiered approval workflow (User → Admin → Superadmin)</strong> to ensure rigorous quality control before projects are published to a searchable portal. The system will be engineered using a modern, scalable tech stack (React.js/Next.js and Node.js/MongoDB) with role-based access controls and customized dashboards.
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">2</div>
+        <div class="section-title">Scope of Work</div>
+      </div>
+
+      <table class="scope-table">
+        <thead>
+          <tr>
+            <th>Phase</th>
+            <th>Discipline</th>
+            <th>Scope Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="phase-cell">Phase 01</td>
+            <td><strong>UI/UX & Architecture</strong></td>
+            <td>
+              Full system architecture based on the PRD. Wireframing of role-based dashboards (User/Admin/Superadmin), submission forms, and project portals.
+              <div style="margin-top:7px;">
+                <span class="deliverable-tag">Figma Wireframes</span>
+                <span class="deliverable-tag">RBAC Logic Map</span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="phase-cell">Phase 02</td>
+            <td><strong>Frontend Engineering</strong></td>
+            <td>
+              React.js / Next.js build for a clean, modern, and mobile-responsive interface. Implementing dynamic forms, advanced filtering UI, and quick-insight dashboards.
+              <div style="margin-top:7px;">
+                <span class="deliverable-tag">React.js Codebase</span>
+                <span class="deliverable-tag">Responsive UI</span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="phase-cell">Phase 03</td>
+            <td><strong>Backend Engineering</strong></td>
+            <td>
+              Node.js / Express API paired with MongoDB/PostgreSQL. Development of the multi-level approval engine, status tracking logic, JWT authentication, and secure AWS S3 media uploads.
+              <div style="margin-top:7px;">
+                <span class="deliverable-tag">Node.js API</span>
+                <span class="deliverable-tag">Approval Engine</span>
+                <span class="deliverable-tag">Database Schema</span>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="phase-cell">Phase 04</td>
+            <td><strong>Admin & Deployment</strong></td>
+            <td>
+              Delivery of Superadmin global controls (managing brick types, categories, locations). System deployment, UAT, and optional automated email/in-app notifications.
+              <div style="margin-top:7px;">
+                <span class="deliverable-tag">Superadmin CMS</span>
+                <span class="deliverable-tag">Live Deployment</span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">3</div>
+        <div class="section-title">System Specifications (PRD)</div>
+      </div>
+
+      <div class="pages-grid-v2">
+        <div>
+          <div class="pgv2-header"><span class="pg-nav-num">01</span> User Roles (RBAC)</div>
+          <div class="pgv2-body">
+            <div class="pgv2-section"><div class="pgv2-dot"></div><div class="pgv2-section-text"><strong>Superadmin</strong><em>Full system control. Final approver. Manages categories, filters, users, and system settings.</em></div></div>
+            <div class="pgv2-section"><div class="pgv2-dot"></div><div class="pgv2-section-text"><strong>Admin</strong><em>First-pass reviewer. Can approve (send to Superadmin), reject, or edit user submissions.</em></div></div>
+            <div class="pgv2-section"><div class="pgv2-dot"></div><div class="pgv2-section-text"><strong>User</strong><em>Submits new projects. Can edit before approval, track status, and browse approved portals.</em></div></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="pgv2-header"><span class="pg-nav-num">02</span> Approval Workflow</div>
+          <div class="pgv2-body">
+            <div class="pgv2-section"><div class="pgv2-dot"></div><div class="pgv2-section-text"><strong>1. Submission</strong><em>User submits → Status: Pending (Admin)</em></div></div>
+            <div class="pgv2-section"><div class="pgv2-dot"></div><div class="pgv2-section-text"><strong>2. Admin Review</strong><em>Approve → Moves to Superadmin. Reject → Returns to User with feedback.</em></div></div>
+            <div class="pgv2-section"><div class="pgv2-dot"></div><div class="pgv2-section-text"><strong>3. Superadmin Review</strong><em>Approve → Published. Reject → Returns to Admin/User.</em></div></div>
+            <div class="pgv2-section"><div class="pgv2-dot"></div><div class="pgv2-section-text"><strong>4. Live Portal</strong><em>Project appears in searchable directory.</em></div></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="pgv2-header"><span class="pg-nav-num">03</span> Core Modules</div>
+          <div class="pgv2-body">
+            <div class="pgv2-section"><div class="pgv2-dot"></div><div class="pgv2-section-text"><strong>Project Submission Form</strong><em>Captures Name, Location, Brick Type, Builder, Completion Date, and Media Uploads.</em></div></div>
+            <div class="pgv2-section"><div class="pgv2-dot"></div><div class="pgv2-section-text"><strong>Projects Portal</strong><em>Search & filter by Brick Type, Location, Project Type, and Status.</em></div></div>
+            <div class="pgv2-section"><div class="pgv2-dot"></div><div class="pgv2-section-text"><strong>Dynamic Dashboards</strong><em>Custom views showing pending stats for Admins and submitted history for Users.</em></div></div>
+          </div>
+        </div>
+
+        <div class="pgv2-global">
+          <div class="pgv2-global-item"><span>FRONTEND</span> React.js / Next.js</div>
+          <div class="pgv2-global-item"><span>BACKEND</span> Node.js / Express</div>
+          <div class="pgv2-global-item"><span>DATABASE</span> MongoDB / PostgreSQL</div>
+          <div class="pgv2-global-item"><span>STORAGE</span> AWS S3 / JWT Auth</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">4</div>
+        <div class="section-title">Standard Operating Procedure (SOP) &amp; Execution</div>
+      </div>
+
+      <p style="margin-bottom: 25px; line-height: 1.6;">To maintain strict cost controls and ensure rapid, flawless delivery, this project will follow a rigid 5-step execution protocol:</p>
+
+      <div class="timeline">
+        <div class="tl-item active">
+          <div class="tl-dot"></div>
+          <div class="tl-header">
+            <span class="tl-step">Step 01</span>
+            <span class="tl-title">Project Approval &amp; Onboarding</span>
+          </div>
+          <div class="tl-desc">Client processes advance payment and provides all baseline category data (brick types, locations).</div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-header">
+            <span class="tl-step">Step 02</span>
+            <span class="tl-title">Prototyping &amp; Frontend Display</span>
+          </div>
+          <div class="tl-desc">Engineering team builds and displays the UI/UX Dashboards and React.js frontend environment.</div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-header">
+            <span class="tl-step">Step 03</span>
+            <span class="tl-title">Review Meeting</span>
+          </div>
+          <div class="tl-desc">Dedicated session with JJBricks to discuss the frontend display and finalize workflow UI.</div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-header">
+            <span class="tl-step">Step 04</span>
+            <span class="tl-title">Backend Engineering &amp; RBAC</span>
+          </div>
+          <div class="tl-desc">Team develops the Node.js backend, connects databases, and programs the strict Admin/Superadmin approval logic.</div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-header">
+            <span class="tl-step">Step 05</span>
+            <span class="tl-title">UAT Delivery &amp; Launch</span>
+          </div>
+          <div class="tl-desc">Final delivery of the functional IPMS for internal User Acceptance Testing and production launch.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">5</div>
+        <div class="section-title">Investment Options</div>
+      </div>
+
+      <div class="investment-grid">
+        <div class="investment-block">
+          <div class="investment-label">Option A: Base Development Package</div>
+          <div class="investment-price"><sup>₹</sup>80,000</div>
+          <div style="font-size:12px; color:var(--warm-mid); margin-bottom:10px;">+ GST (18%)</div>
+          <div style="font-size:12px; line-height:1.6; color:var(--ink);">
+            <strong>Best for:</strong> Teams with internal IT resources.<br/><br/>
+            • Full UI/UX & Architecture<br/>
+            • Complete Frontend/Backend Development<br/>
+            • Standard QA Testing<br/>
+            • Initial Server Deployment<br/>
+            <em>Timeline: 7-10 Working Days</em>
+          </div>
+        </div>
+
+        <div class="investment-block premium">
+          <div class="investment-label">Option B: Comprehensive Enterprise Package</div>
+          <div class="investment-price"><sup>₹</sup>1,20,000</div>
+          <div style="font-size:12px; color:var(--warm-mid); margin-bottom:10px;">+ GST (18%)</div>
+          <div style="font-size:12px; line-height:1.6; color:var(--ink);">
+            <strong>Best for:</strong> A completely hands-off experience.<br/><br/>
+            • <strong>Everything in Option A</strong><br/>
+            • <strong>Staff Training:</strong> 2 Training Sessions<br/>
+            • <strong>Priority Support SLA</strong><br/>
+            • <strong>3 Months Maintenance:</strong> Proactive monitoring, automated backups, and bug-fixes.<br/>
+            <em>Timeline: 7-10 Working Days + 3 Mo. Support</em>
+          </div>
+        </div>
+      </div>
+
+      <div class="bundle-box">
+        <div>
+          <div class="bundle-title">🚀 Strategic Bundle: The Digital Ecosystem</div>
+          <div style="font-size:12.5px; opacity:0.9; max-width:550px; line-height:1.6;">
+            Executing the contract for <strong>both the Public Website and the IPMS together</strong> allows us to share backend architectures (e.g., pulling IPMS projects natively into the website). If bundled, receive an <strong>8% ecosystem discount</strong> across the entire combined project total.
+          </div>
+        </div>
+        <div style="font-family:'DM Mono', monospace; font-size:24px; color:var(--white); font-weight:bold; white-space:nowrap;">
+          -8% OFF
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">6</div>
+        <div class="section-title">Payment Schedule (Based on Option B)</div>
+      </div>
+
+      <table class="payment-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Milestone</th>
+            <th>%</th>
+            <th>Amount (Excl. GST)</th>
+            <th>Payment Trigger</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="font-family:'DM Mono',monospace;color:var(--warm-mid);">01</td>
+            <td class="milestone-cell">Advance / Mobilization</td>
+            <td class="percent-cell">50%</td>
+            <td class="amount-cell">₹ 60,000</td>
+            <td class="trigger-cell">On project approval and contract signing</td>
+          </tr>
+          <tr>
+            <td style="font-family:'DM Mono',monospace;color:var(--warm-mid);">02</td>
+            <td class="milestone-cell">Beta Delivery (UAT)</td>
+            <td class="percent-cell">25%</td>
+            <td class="amount-cell">₹ 30,000</td>
+            <td class="trigger-cell">On delivery of functional staging environment</td>
+          </tr>
+          <tr>
+            <td style="font-family:'DM Mono',monospace;color:var(--warm-mid);">03</td>
+            <td class="milestone-cell">Go-Live / Handover</td>
+            <td class="percent-cell">25%</td>
+            <td class="amount-cell">₹ 30,000</td>
+            <td class="trigger-cell">Prior to production deployment & maintenance start</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3" class="total-label">TOTAL PROFESSIONAL FEE (EXCL. GST)</td>
+            <td colspan="2" class="total-amount">₹ 1,20,000</td>
+          </tr>
+        </tfoot>
+      </table>
+      <div class="note-box" style="margin-top:12px;">
+        *If Option A or the Bundle is selected, the 50/25/25 percentage structure remains identical on the revised total. Server/AWS costs billed at actuals.
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">7</div>
+        <div class="section-title">Client Responsibilities &amp; Deliverables</div>
+      </div>
+
+      <div class="deliver-grid">
+        <div class="deliver-item">
+          <div class="deliver-text">
+            <div class="dt-title">Master Data Lists</div>
+            <div class="dt-note">Complete initial lists for Brick Types, Project Categories, and Location tags to populate the system database.</div>
+          </div>
+        </div>
+        <div class="deliver-item">
+          <div class="deliver-text">
+            <div class="dt-title">Brand Assets</div>
+            <div class="dt-note">Logo files (SVG / AI / EPS), brand colours, and internal branding guidelines for the dashboard UI.</div>
+          </div>
+        </div>
+        <div class="deliver-item">
+          <div class="deliver-text">
+            <div class="dt-title">Timely Feedback</div>
+            <div class="dt-note">Written consolidated feedback within 3 working days of UAT delivery and design milestones.</div>
+          </div>
+        </div>
+        <div class="deliver-item">
+          <div class="deliver-text">
+            <div class="dt-title">Domain &amp; Server Access</div>
+            <div class="dt-note">Domain registrar credentials and AWS/Cloud panel access (or confirmation to procure on client's behalf).</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">8</div>
+        <div class="section-title">Terms &amp; Conditions</div>
+      </div>
+
+      <div class="tc-grid">
+        <div class="tc-item">
+          <div class="tc-bullet"></div>
+          <div class="tc-text"><strong>Scope Changes:</strong> Any additional features not listed in the PRD will be scoped and quoted separately.</div>
+        </div>
+        <div class="tc-item">
+          <div class="tc-bullet"></div>
+          <div class="tc-text"><strong>Third-Party Costs:</strong> All AWS S3 storage, server hosting, and API fees are billed at actuals on a pass-through basis.</div>
+        </div>
+        <div class="tc-item">
+          <div class="tc-bullet"></div>
+          <div class="tc-text"><strong>IP & Ownership:</strong> Full IPMS codebase and database ownership transfers to the client upon receipt of final payment.</div>
+        </div>
+        <div class="tc-item">
+          <div class="tc-bullet"></div>
+          <div class="tc-text"><strong>Maintenance:</strong> Included 3-month maintenance (Option B) begins immediately on the date of Go-Live/Production deployment.</div>
+        </div>
+      </div>
+    </div>
+
+  </div></div></body>
+</html>
