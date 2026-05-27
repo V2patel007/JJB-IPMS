@@ -202,18 +202,6 @@ export default function Dashboard() {
         )}
       </div>
 
-      {/* Floating Action Button */}
-      <div className="fixed bottom-8 right-8 z-50 flex flex-col items-end gap-2 group">
-        <div className="bg-black text-white text-[10px] font-bold px-3 py-1 uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          Get Quotation
-        </div>
-        <Button 
-          className="h-14 w-14 rounded-full bg-primary hover:bg-primary-dark shadow-xl shadow-primary/20 flex items-center justify-center p-0 transition-transform hover:scale-110"
-          onClick={() => window.open('/quotation.html', '_blank')}
-        >
-          <PlusCircle className="h-6 w-6 text-white" />
-        </Button>
-      </div>
     </div>
   );
 }

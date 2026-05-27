@@ -59,8 +59,6 @@ export default function WelcomeModal() {
               <div className="space-y-6 text-gray-600 font-medium leading-relaxed max-w-md">
                 <p>
 This website has been designed as per your requirement to understand the working of the system , there is no database connected as of now . And this is just a dummy Interface (UI) .
-                <p> <br></br>
-To Get Quotation you can Click the button on right bottom of the page.                </p>
                 </p>
               </div>
 
